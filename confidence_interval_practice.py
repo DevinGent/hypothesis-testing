@@ -33,6 +33,10 @@ print(get_con_interval(sample,.95)[0])
 print("The mean and sample deviation of the sample are {} and {}".format(sample.mean(),sample.std()))
 
 print("The margin of error is {}".format(st.norm.ppf(.975)*(sample.std()/6)))
+print(st.norm.ppf(.975))
+print(st.norm.ppf(.025))
+print("The interval computed manually is",
+      (sample.mean()-st.norm.ppf(.975)*(sample.std()/6),sample.mean()+st.norm.ppf(.975)*(sample.std()/6)))
 # The function seems to be working correctly.
 # We will take many samples, and see how many of the confidence intervals (at 95%) obtained contain the population mean.
 inside=0
@@ -54,15 +58,15 @@ print("the population mean was inside the interval {} times and outside {} times
 
 # We will create a function from the above code so we can test at whatever number of tests we like, again and again.
 
-def in_or_out(n):
-    """Takes a number of tests, n, and then generates n samples and confidence intervals, collecting the
+def in_or_out(n, con_level):
+    """Takes a number of tests, n, and then generates n samples and confidence intervals (at con_level), collecting the
     number of times the population mean was inside the confidence interval."""
     inside=0
     outside=0
     pop_mean=pop.mean()
     for i in range(n):
         sample=np.random.default_rng(i).choice(pop, size=36)
-        interval=get_con_interval(sample,.95)
+        interval=get_con_interval(sample,con_level)
         if pop_mean<interval[0] or pop_mean>interval[1]:
             outside=outside+1
         elif pop_mean>=interval[0] and pop_mean<=interval[1]:
@@ -75,7 +79,7 @@ def in_or_out(n):
     print("That is, the population mean was inside the interval {}% of the time.".format(success_percent))
 
 in_or_out(100)
-# This matches the above.
+
 
 for i in np.random.default_rng(1).choice(range(1000), size=10):
     in_or_out(i)
