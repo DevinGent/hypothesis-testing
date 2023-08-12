@@ -2,10 +2,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import math
+import hypothesis_tools as ht
 
+np.random.seed(1)
 # We first establish a population, from a normal distribution, of size 1000 with mean 0 and standard deviation 1.
-pop = np.random.default_rng(1).normal(loc=0, scale=1, size=1000)
-# Note that default_rng(1) makes the random choice reproducible.
+pop = np.random.normal(loc=0, scale=1, size=1000)
 
 sns.kdeplot(pop)
 plt.show()
@@ -19,13 +20,18 @@ print('The mean of the population is {}'.format(pop.mean()))
 # (-inf, -1.960] and [1.960,inf)
 # The null hypothesis is that the mean is 0, the alternative hypothesis is that the mean is different (higher or lower) than 0.
 
-sample = np.random.default_rng(1).choice(pop, size=35)
+sample = np.random.choice(pop, size=35)
 sample_mean =sample.mean()
 sample_std = sample.std()
 
 zscore= (sample_mean)/(sample_std/(math.sqrt(35)))
 print("The Z-score is {}".format(zscore))
+# The score falls outside the rejection range.  Let's compare this to our tools from the module hypothesis_tools
+print(ht.z_test(sample,0,confidence=.95))
 print(len(sample))
+
+
+
 
 # Now let us do this multiple times and see what happens.
 
@@ -41,7 +47,7 @@ reject=0
 do_not_reject=0
 tests=0
 for i in range(100000):
-    test_sample= np.random.default_rng(i).choice(pop, size=35)
+    test_sample= np.random.choice(pop, size=35)
     test_zscore = get_zscore(test_sample,pop.mean())
     tests=tests+1
     if test_zscore<=-1.96 or test_zscore >= 1.96:
@@ -51,3 +57,4 @@ for i in range(100000):
 
 print("After collecting samples {} times,".format(tests))
 print("the null hypothesis was rejected {} times, and failed to be rejected {} times.".format(reject, do_not_reject))
+print("That's a {}% rejection rate.".format(100*reject/tests))

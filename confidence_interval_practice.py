@@ -4,8 +4,8 @@ import seaborn as sns
 import scipy.stats as st
 import math
 
-np.random.RandomState(1)
-# Note that np.random.RandomState(1) makes the code's behavior reproducible.
+np.random.seed(1)
+# Note that np.random.seed(1) makes the code's behavior reproducible.
 
 
 # We first establish a population, from a normal distribution, of size 1000 with mean 0 and standard deviation 1.

@@ -59,7 +59,7 @@ def in_or_out_pct(n,con_level=.95,sample_size=40):
     return round(100*(inside/n),2)
 
 
-np.random.RandomState(1)
+np.random.seed(1)
 sample=np.random.normal(loc=0, scale=1, size=31)
 print(get_con_interval(sample,.95))
 print(sample.mean())
