@@ -58,7 +58,9 @@ def in_or_out_pct(n,con_level=.95,sample_size=40):
             print("There was an issue on test number {}".format(i))
     return round(100*(inside/n),2)
 
-sample=np.random.default_rng(12).normal(loc=0, scale=1, size=31)
+
+np.random.RandomState(1)
+sample=np.random.normal(loc=0, scale=1, size=31)
 print(get_con_interval(sample,.95))
 print(sample.mean())
 
@@ -76,6 +78,11 @@ sns.lineplot(x=x, y=y)
 plt.gca().yaxis.set_major_formatter(mtick.PercentFormatter())
 plt.show()
 
+plt.figure(figsize=(6,4))
+sns.lineplot(x=[i for i in range(10,2010,10)], y=[in_or_out_pct(n,.95,32) for n in range(10,2010,10)])
+plt.gca().yaxis.set_major_formatter(mtick.PercentFormatter())
+plt.show()
+
 # Let us compare different confidence levels and sample sizes.
 fig,axs = plt.subplots(3, 2, sharex='all', sharey='all', figsize=(10,6))
 
@@ -88,3 +95,5 @@ sns.lineplot(x=x, y=[in_or_out_pct(n,.975,40) for n in x], ax=axs[2,1])
 for ax in axs.reshape(-1): 
   ax.yaxis.set_major_formatter(mtick.PercentFormatter(decimals=2))
 plt.show()
+
+
